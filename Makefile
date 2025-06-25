@@ -21,6 +21,9 @@ ifeq ($(OS),Windows_NT)
     RM := del /Q /F
     # Команда удаления папок в Windows
     RMDIR := rmdir /S /Q
+    # Windows-специфичная проверка существования директории
+    CHECK_DIR_CMD = if not exist "$(1)" $(MKDIR) "$(1)"
+    CHECK_FILE_CMD = if exist "$(1)"
 else
     # Linux
     # Linux локализация
@@ -33,6 +36,9 @@ else
     RM := rm -f
     # Рекурсивное удаление
     RMDIR := rm -rf
+    # Linux-специфичная проверка существования директории
+    CHECK_DIR_CMD = test -d "$(1)" || $(MKDIR) "$(1)"
+    CHECK_FILE_CMD = test -f "$(1)"
 endif
 
 # Все исходники
@@ -50,16 +56,15 @@ $(TARGET): $(OBJS)
 
 # Компиляция .cpp в .o
 obj/%.o: src/%.cpp
-    # Сначала создаем папку для объектных файлов, если ее нет
-	@if not exist "$(@D)" $(MKDIR) "$(@D)"
-    # Компилируем исходник в объектный файл
+	@$(call CHECK_DIR_CMD,$(@D))
+	# Компилируем исходник в объектный файл
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Очистка (кроссплатформенная)
 clean:
-    # Удаляем исполняемый файл, если он существует
-	@if exist "$(TARGET)" $(RM) "$(TARGET)"
-    # Удаляем папку с объектными файлами, если она существует
-	@if exist "obj" $(RMDIR) "obj"
+	# Удаляем исполняемый файл, если он существует
+	@$(call CHECK_FILE_CMD,$(TARGET)) && $(RM) "$(TARGET)" || true
+	# Удаляем папку с объектными файлами, если она существует
+	@$(call CHECK_DIR_CMD,obj) && $(RMDIR) "obj" || true
 
 .PHONY: all clean

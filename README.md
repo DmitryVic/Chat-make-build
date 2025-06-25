@@ -81,3 +81,21 @@ make all
 ```bash
 make clean
 ```
+
+# ❗ Важно
+
+Приложение требует русскую локализацию в кодировке UTF-8. Если данная локализация отсутствует в Linux,  выполнить установку:
+```bash
+# Генерация русской локали
+sudo locale-gen ru_RU
+sudo locale-gen ru_RU.UTF-8
+
+# Обновление локалей
+sudo update-locale LANG=ru_RU.UTF-8
+
+# Проверка доступных локалей
+locale -a | grep ru_RU
+# ru_RU
+# ru_RU.iso88595
+# ru_RU.utf8
+```
