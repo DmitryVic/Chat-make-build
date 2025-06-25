@@ -98,4 +98,5 @@ locale -a | grep ru_RU
 # ru_RU
 # ru_RU.iso88595
 # ru_RU.utf8
+
 ```
