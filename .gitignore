@@ -30,4 +30,5 @@ obj/
 *.a
 *.lib
 
-*chat.exe
+/chat
+/chat.exe
