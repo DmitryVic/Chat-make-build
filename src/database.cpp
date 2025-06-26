@@ -63,7 +63,7 @@ void Database::loadUsersFromFile() {
 
 // Добавить пользовател - принимает и временные, и существующие объекты
 void Database::setUser(std::shared_ptr<User> user){
-    this->usersInChat.insert(std::move(user));       // Перемещаем, чтобы избежать копирования
+    this->usersInChat.insert(user);
     write_BD(BD_FILE, user);
 
 }
@@ -115,10 +115,7 @@ std::shared_ptr<User> Database::regUser(
                 // Пытаемся создать пользователя
                 auto user = std::make_shared<User>(login, password, name);
                 // Добавляем копию указателя в базу данных
-                this->usersInChat.insert(user);
-                //Записать в файл данные
-                write_BD(BD_FILE, user);
-                //setUser(user);
+                setUser(user);
                 // Возвращаем указатель на созданного юзера
                 return user;
             }
