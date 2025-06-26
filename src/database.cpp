@@ -46,13 +46,14 @@ void Database::loadUsersFromFile() {
            std::getline(file, password) && 
            std::getline(file, name)) {
         // Пропускаем пустые строки
+        // Если любое из полей пустое - пропускаем эту итерацию цикла Защита от некорр данных
         if (login.empty() || password.empty() || name.empty()) {
             continue;
         }
         
         // Создаем пользователя и добавляем в множество
         auto user = std::make_shared<User>(login, password, name);
-        usersInChat.insert(user); //тогда тут ошибка если он обособлен от базы данных
+        usersInChat.insert(user);
         
         // Пропускаем пустую строку-разделитель
         std::string empty_line;
