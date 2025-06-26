@@ -125,7 +125,7 @@ void reg(shared_ptr<Database>& db, shared_ptr<ChatHared>& haredChat){
 }
 
 
-int main(int argc, char const *argv[])
+int main()
 {
 
     // Универсальная настройка локали

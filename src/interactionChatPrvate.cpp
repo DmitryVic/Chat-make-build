@@ -16,7 +16,7 @@ using namespace std;
 
 
 //открывает приватный чат, получает от пользователя сообщеня при "0" - выход, передать базу данных, залогированнного пользователя, выброный чат
-void openChatPrivate(shared_ptr<Database>& db, shared_ptr<User>& userAuthorization, shared_ptr<ChatPrivate>& chatP){
+void openChatPrivate(shared_ptr<User>& userAuthorization, shared_ptr<ChatPrivate>& chatP){
     cout << _GREEN << "Зашли в приватный чат"  << _CLEAR << endl;
     string userInput;                                    // Вводимое пользователем знначение
     while (userInput != "0")
@@ -36,7 +36,7 @@ void openChatPrivate(shared_ptr<Database>& db, shared_ptr<User>& userAuthorizati
 
 
 // Позволяет пользователю выбрать чат  из имеющихся, передать базу данных, залогированнного пользователя
-void  UserChoiceChatPrivate(shared_ptr<Database>& db, shared_ptr<User>& userAuthorization){
+void  UserChoiceChatPrivate(shared_ptr<User>& userAuthorization){
     vector<size_t> chatIndexList;                                        // для сохранения индексов чатов
     size_t userNamberInput = 999;                                    // для получения номера пользователя и открытия чата
     
@@ -72,7 +72,7 @@ void  UserChoiceChatPrivate(shared_ptr<Database>& db, shared_ptr<User>& userAuth
         {
             if (chatIndexList[i] == userNamberInput)                        // если значение пользователя совпало с записанными индексами
             {
-                openChatPrivate(db, userAuthorization, userAuthorization->getConnectionChatPrivate()[i]); 
+                openChatPrivate(userAuthorization, userAuthorization->getConnectionChatPrivate()[i]); 
             } else if (i + 1 == sizeChatPrivate)                            // в последней итерации если не нашли значение выводим сообщение
             {   
                 cout << _YELLOW << "Вы ввель не коректное значение, попробуйте еще раз" << _CLEAR  << endl;
@@ -142,7 +142,7 @@ void createChatPrivate(shared_ptr<Database>& db, shared_ptr<User>& userAuthoriza
                 );
                 userAuthorization->setChat(chatP);                               // Записали нашему пользователю созданый чат
                 userIndexList[userNamberInput - 1]->setChat(chatP);                  // Записали выбраному пользомателю созданый чат
-                openChatPrivate(db, userAuthorization, chatP);                  // Запускаем чат
+                openChatPrivate(userAuthorization, chatP);                  // Запускаем чат
             }
             else
             {
@@ -211,7 +211,7 @@ void menuChatPrivate(shared_ptr<Database>& db, shared_ptr<User>& userAuthorizati
             }
             else
             {
-                UserChoiceChatPrivate(db, userAuthorization);                                       //в меню выбора чатов
+                UserChoiceChatPrivate(userAuthorization);                                       //в меню выбора чатов
             }
             break;
         default:
