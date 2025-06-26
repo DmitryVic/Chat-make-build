@@ -2,6 +2,7 @@
 obj/
 .vscode/
 .vs/
+file/
 # Prerequisites
 *.d
 

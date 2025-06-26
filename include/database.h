@@ -3,6 +3,7 @@
 #include <set>
 #include <memory>
 
+
 // для хранения указателей на класс User
 class User;
 
@@ -12,6 +13,9 @@ class Database
 private:
     //Список пользователей
     std::set<std::shared_ptr<User>> usersInChat;
+    // Загрузка пользователей из файла
+    void loadUsersFromFile();
+
 public:
     Database();
     ~Database();
