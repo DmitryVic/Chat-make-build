@@ -39,6 +39,17 @@ void createFile(const std::string& filename) {
     }
 }
 
+// Список всех .txt-файлов в директории dir
+std::vector<std::string> listChatFiles(const std::string& dir) {
+    std::vector<std::string> out;
+    if (!fs::exists(dir) || !fs::is_directory(dir)) return out;
+    for (auto& p : fs::directory_iterator(dir)) {
+        if (p.is_regular_file() && p.path().extension() == ".txt") {
+            out.push_back(p.path().string());
+        }
+    }
+    return out;
+}
 
 /*=====================================
         ФУНКЦИИ БД
@@ -77,3 +88,21 @@ void write_Chat_P(const std::string& filename, std::shared_ptr<User> user, std::
         std::cerr << "Ошибка записи в файл чата: " << filename << std::endl;
     }
 }
+
+
+// Загрузка истории приватного чата
+ bool load_Chat_P(const std::string& filename,
+                  std::vector<std::pair<std::string, std::string>>& out)
+ {
+     if (!fileExists(filename)) return false;
+     std::ifstream fs(filename);
+     if (!fs.is_open()) return false;
+
+     std::string login, mess;
+     while (std::getline(fs, login) && std::getline(fs, mess)) {
+         out.emplace_back(login, mess);
+         std::string sep;
+         std::getline(fs, sep);  // пропускаем пустую строку
+     }
+     return true;
+ }

@@ -7,6 +7,8 @@
 #include <set>
 #include <fstream>
 #include <string>
+#include "file.h"
+#include "chatPrivate.h"
 
 
 static std::string BD_FILE = "file/DB.txt";
@@ -23,6 +25,8 @@ Database::Database()
     } else {
         std::cout << _CYAN << "Чтение БД: " << BD_FILE <<  _CLEAR << std::endl;
         loadUsersFromFile();  // Загружаем пользователей из файла
+        // Восстанавливаем все приватные чаты из файлов
+        loadChats();
     }
 
     std::cout << _BLUE <<  "База данных запущена!" <<  _CLEAR << std::endl;
@@ -152,5 +156,29 @@ std::shared_ptr<User> Database::autorizUser(
     else
     {
         return nullptr;
+    }
+}
+
+
+void Database::loadChats() {
+    // файлы лежат в "file/"
+    for (auto& path : listChatFiles("file")) {
+        // файл: ".../file/login1_login2.txt"
+        auto fname = std::filesystem::path(path).stem().string(); 
+        auto pos = fname.find('_');
+        if (pos == std::string::npos) continue;
+
+        auto login1 = fname.substr(0, pos);
+        auto login2 = fname.substr(pos + 1);
+
+        auto u1 = getOneUserByLogin(login1);
+        auto u2 = getOneUserByLogin(login2);
+        if (!u1 || !u2) continue;
+
+        auto chatP = std::make_shared<ChatPrivate>(u1, u2);
+        u1->setChat(chatP);
+        u2->setChat(chatP);
+
+        chatP->loadHistory(path, *this);
     }
 }

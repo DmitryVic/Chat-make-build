@@ -20,6 +20,8 @@ public:
     Database();
     ~Database();
 
+    void loadChats();
+    
     // Добавить пользовател принимает и временные, и существующие объекты
     void setUser(std::shared_ptr<User> user);
 

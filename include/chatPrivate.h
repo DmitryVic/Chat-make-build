@@ -1,9 +1,12 @@
 #pragma once
 #include "chat.h"
 #include <string>
-#include <utility>
 #include <memory>
+#include <vector>
 #include <utility>
+
+
+class Database;
 
 // приватный чат хранит историю чата, пользователей
 class ChatPrivate : public Chat
@@ -35,6 +38,9 @@ public:
 
     //есть ли в данном чате пользователь
     bool userInChat(std::weak_ptr<User> user) const;
+    
+    // Загрузить из файла пары <login,сообщение> в historyChat
+    void loadHistory(const std::string& filename, const Database& db);
 }; 
 
 

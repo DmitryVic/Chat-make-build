@@ -4,6 +4,8 @@
 #include <string>
 #include <filesystem>  // для работы с директориями
 #include "user.h" 
+#include <vector>
+#include <utility>
 
 
 namespace fs = std::filesystem;
@@ -36,3 +38,11 @@ void write_BD(const std::string& filename, std::shared_ptr<User> user);
 
 //запись в приватный чат, проверить перед записью существоваие файла!
 void write_Chat_P(const std::string& filename, std::shared_ptr<User> user, std::string mess);
+
+
+// Загрузить историю приватного чата: пары <login, сообщение>
+bool load_Chat_P(const std::string& filename,
+std::vector<std::pair<std::string, std::string>>& out);
+
+// Получить список всех файлов чатов в директории
+std::vector<std::string> listChatFiles(const std::string& dir);

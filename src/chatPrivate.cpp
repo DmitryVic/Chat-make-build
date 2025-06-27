@@ -6,7 +6,8 @@
 #include <iostream>
 #include <vector>
 #include <utility>
-
+#include "file.h"
+#include "database.h"
 
 
 // Реализация конструктора и деструктора
@@ -164,4 +165,16 @@ bool ChatPrivate::userInChat(std::weak_ptr<User> user) const{
 // Получить std::vector<std::weak_ptr<User>> всех участников
 std::vector<std::weak_ptr<User>> ChatPrivate::UsersInChatPtr() const{
     return this->usersInChat;
+}
+
+
+void ChatPrivate::loadHistory(const std::string& filename, const Database& db) {
+    std::vector<std::pair<std::string, std::string>> entries;
+    if (!load_Chat_P(filename, entries)) return;
+    for (auto& [login, text] : entries) {
+        auto usr = db.getOneUserByLogin(login);
+        if (usr) {
+            historyChat.emplace_back(std::weak_ptr<User>(usr), text);
+        }
+    }
 }
