@@ -7,6 +7,8 @@
 #include <vector>
 #include <utility>
 
+
+
 // Реализация конструктора и деструктора
 ChatPrivate::ChatPrivate(std::weak_ptr<User> thisUser, std::weak_ptr<User> otherUser) 
 : Chat() 
@@ -156,4 +158,10 @@ bool ChatPrivate::userInChat(std::weak_ptr<User> user) const{
         }
     }
     return false;
+}
+
+
+// Получить std::vector<std::weak_ptr<User>> всех участников
+std::vector<std::weak_ptr<User>> ChatPrivate::UsersInChatPtr() const{
+    return this->usersInChat;
 }

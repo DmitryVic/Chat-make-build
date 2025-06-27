@@ -19,7 +19,10 @@ public:
     ~ChatPrivate() override;
     
     // Получить имена всех участников
-    std::string showUsers() const; 
+    std::string showUsers() const;
+
+    // Получить weak_ptr<User> всех участников
+    std::vector<std::weak_ptr<User>> UsersInChatPtr() const; 
 
     // Должен предать все сообщения из historyChat, форматируя текст относительно пользователя User, тоесть того, кто открыл чат
     std::string getAllMessage(std::weak_ptr<User> user) const override;

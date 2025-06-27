@@ -12,13 +12,44 @@
 #include <set>
 #include <algorithm>
 #include <limits> //Для  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+#include "file.h" // функции для работы с файлами
 using namespace std; 
 
+//вспомогательная функция собирает название чата из предосталенных логинов
+string fileNameChatP(string user1, string user2){
+    string fileChat = "file/";
+    fileChat += user1;
+    fileChat += "_";
+    fileChat += user2;
+    fileChat += ".txt";
+    return fileChat;
+}
 
 //открывает приватный чат, получает от пользователя сообщеня при "0" - выход, передать базу данных, залогированнного пользователя, выброный чат
 void openChatPrivate(shared_ptr<User>& userAuthorization, shared_ptr<ChatPrivate>& chatP){
     cout << _GREEN << "Зашли в приватный чат"  << _CLEAR << endl;
     string userInput;                                    // Вводимое пользователем знначение
+    //получаем логины пользователей в чатате
+    std::vector<std::weak_ptr<User>> userVectorPtrInChat = chatP->UsersInChatPtr();
+    vector<string> userVectorStringInChat;
+    for (std::weak_ptr<User> us: userVectorPtrInChat)
+    {
+        std::shared_ptr<User> usetShPtr = us.lock();
+        userVectorStringInChat.push_back(usetShPtr->getLogin());
+    }
+    // собираем название чата
+    string fileName;
+    //Если существует такой файл
+    if (fileExists(fileNameChatP(userVectorStringInChat[0], userVectorStringInChat[1]))) {
+        fileName = fileNameChatP(userVectorStringInChat[0], userVectorStringInChat[1]);
+    } else if (fileExists(fileNameChatP(userVectorStringInChat[1], userVectorStringInChat[0]))){
+        fileName = fileNameChatP(userVectorStringInChat[1], userVectorStringInChat[0]);
+    } else {
+        //Нету такого файла создаем заного
+        fileName = fileNameChatP(userVectorStringInChat[0], userVectorStringInChat[1]);
+        createFile(fileName);
+    }
+
     while (userInput != "0")
     {
         cout << _GREY_BG << "\n\n\t\t" << chatP->showUsers()<< _GREY_BG << "\n" << _CLEAR  << endl;
@@ -29,13 +60,14 @@ void openChatPrivate(shared_ptr<User>& userAuthorization, shared_ptr<ChatPrivate
         if (userInput != "0")                           // при выходи пропускаем запись
         {
             chatP->addMessage(userAuthorization, userInput);
+            write_Chat_P(fileName, userAuthorization, userInput);
         }
     }
 
 }
 
 
-// Позволяет пользователю выбрать чат  из имеющихся, передать базу данных, залогированнного пользователя
+// Позволяет пользователю выбрать чат  из имеющихся, передать залогированнного пользователя
 void  UserChoiceChatPrivate(shared_ptr<User>& userAuthorization){
     vector<size_t> chatIndexList;                                        // для сохранения индексов чатов
     size_t userNamberInput = 999;                                    // для получения номера пользователя и открытия чата
@@ -142,6 +174,17 @@ void createChatPrivate(shared_ptr<Database>& db, shared_ptr<User>& userAuthoriza
                 );
                 userAuthorization->setChat(chatP);                               // Записали нашему пользователю созданый чат
                 userIndexList[userNamberInput - 1]->setChat(chatP);                  // Записали выбраному пользомателю созданый чат
+                //составляем название файла
+                string fileChat = "file/";
+                fileChat += userAuthorization->getLogin();
+                fileChat += "_";
+                fileChat += userIndexList[userNamberInput - 1]->getLogin();
+                fileChat += ".txt";
+                //проверка существования директории истории чатов
+                if (!fileExists(fileChat)) {
+                    std::cout << _CYAN << "Создание Чата: " << fileChat <<  _CLEAR << std::endl;
+                    createFile(fileChat);
+                }
                 openChatPrivate(userAuthorization, chatP);                  // Запускаем чат
             }
             else
