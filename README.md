@@ -77,18 +77,33 @@ pacman -S mingw-w64-ucrt-x86_64-g++ make
 ```
 
 ## Сборка проекта:
+Linux:
 ```bash
 make all
 ```
+Windows MSYS2:
+```bash
+mingw32-make
+```
 
 ## Запуск приложени Chat
+Linux:
 ```bash
 ./chat
 ```
+Windows MSYS2:
+```bash
+.\chat.exe
+```
 
 ## Очистить файлы сборки с удалением скомпилированного файла
+Linux:
 ```bash
 make clean
+```
+Windows MSYS2:
+```bash
+mingw32-make clean
 ```
 
 # ❗ Важно
