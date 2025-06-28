@@ -43,7 +43,12 @@ obj/%.o: src/%.cpp
 
 # Очистка
 clean:
-	@$(call CHECK_FILE,$(TARGET)) && $(RM) "$(TARGET)" || true
-	@$(call CHECK_DIR,obj) && $(RMDIR) "obj" || true
+ifeq ($(OS),Windows_NT)
+	- del /Q /F "$(TARGET)"
+	- rmdir /S /Q obj
+else
+	- rm -f "$(TARGET)"
+	- rm -rf obj
+endif
 
 .PHONY: all clean

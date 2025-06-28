@@ -39,7 +39,7 @@ void write_BD(const std::string& filename, std::shared_ptr<User> user);
 =====================================*/
 
 //запись в приватный чат, проверить перед записью существоваие файла!
-void write_Chat_P(const std::string& filename, std::shared_ptr<User> user, std::string mess);
+void write_Chat_P(const std::string& filename, std::shared_ptr<User> user, const std::string& mess);
 
 
 // Загрузить историю приватного чата: пары <login, сообщение>
