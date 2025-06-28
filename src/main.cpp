@@ -25,8 +25,6 @@
 using namespace std;
 
 
-
-
 void chatStart(shared_ptr<Database>& db, shared_ptr<User>& userAuthorization, shared_ptr<ChatHared>& haredChat){
     char menu = '9';
 
@@ -147,7 +145,10 @@ int main()
 
     char menu = '9';
     shared_ptr<Database> database(new Database());
+    //Создание и загрузка истории общего чата
     shared_ptr<ChatHared> haredChat(new ChatHared("Общий чат"));
+    haredChat->loadChatHered(database);
+
     cout << _GREEN <<  "Готов к работе" <<  _CLEAR << std::endl;
 
     while (menu != '0')

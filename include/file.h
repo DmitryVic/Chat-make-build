@@ -23,6 +23,8 @@ void createDirectoryIfNeeded(const std::string& path);
 // Создать файл
 void createFile(const std::string& filename);
 
+// Получить список всех файлов чатов в директории
+std::vector<std::string> listChatFiles(const std::string& dir);
 
 /*=====================================
         ФУНКЦИИ БД
@@ -43,6 +45,3 @@ void write_Chat_P(const std::string& filename, std::shared_ptr<User> user, std::
 // Загрузить историю приватного чата: пары <login, сообщение>
 bool load_Chat_P(const std::string& filename,
 std::vector<std::pair<std::string, std::string>>& out);
-
-// Получить список всех файлов чатов в директории
-std::vector<std::string> listChatFiles(const std::string& dir);

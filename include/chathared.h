@@ -5,6 +5,7 @@
 #include <memory>
 #include <utility>
 
+class Database;
 
 // Общий чат для всех, у всех есть доступ, создается изначально после БД, хранит только сообщения (юзер указатель, сообщение string)
 class ChatHared : public Chat
@@ -27,8 +28,9 @@ public:
     // вернет true - при успехе, false - при ошибке
     bool addMessage(std::weak_ptr<User> sender, const std::string& msg) override;
 
-
     // Получить название чата
     std::string getNameChat() const;
 
+    //Востановить историю чата + создать файл, если отсутствует
+    void loadChatHered(std::shared_ptr<Database> db);
 };

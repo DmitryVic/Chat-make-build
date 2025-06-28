@@ -7,7 +7,6 @@
 #include <set>
 #include <fstream>
 #include <string>
-#include "file.h"
 #include "chatPrivate.h"
 
 
