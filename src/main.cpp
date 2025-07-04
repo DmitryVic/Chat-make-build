@@ -133,17 +133,38 @@ int main()
     // Универсальная настройка локали
     setlocale(LC_ALL, "ru_RU.UTF-8");
     
-    cout << _GREY_BG << "Сработала ветка OS: " << OS << _CLEAR << endl << endl;
+    
     // Настройки для Windows
     // исправляет не коректную запись в string русских символов в консоле
     // распространяет локализацию на весь проект 
     #if defined(_WIN32)
         SetConsoleCP(CP_UTF8);
         SetConsoleOutputCP(CP_UTF8);
+        cout << _GREY_BG << "Сработала ветка OS: " << OS << _CLEAR << endl << endl;
+
+        std::cout << "OS name: Windows" << std::endl;
+        SYSTEM_INFO sysInfo;
+        GetSystemInfo(&sysInfo);
+         std::cout << "Процессорная архитектура: ";
+        switch (sysInfo.wProcessorArchitecture) {
+        case PROCESSOR_ARCHITECTURE_AMD64:
+            std::cout << "x64" << std::endl;
+            break;
+        case PROCESSOR_ARCHITECTURE_INTEL:
+            std::cout << "x86" << std::endl;
+            break;
+        default:
+            std::cout << "Другая" << std::endl;
+            break;
+        }
+        std::cout << "Количество ядер: " << sysInfo.dwNumberOfProcessors << std::endl;
+        std::cout << "RUN...." << std::endl;
+
     // Для Linux/Mac
     // был ли определен SET_GLOBAL_LOCALE_LINUX ? да (в cmake) или нет (в cmake)
     #elif defined(__linux__)
         std::locale::global(std::locale("ru_RU.UTF-8"));
+        cout << _GREY_BG << "Сработала ветка OS: " << OS << _CLEAR << endl << endl;
         struct utsname utsname;
         uname(&utsname);
         cout << "OS name: " << utsname.sysname << endl; 
@@ -153,7 +174,6 @@ int main()
         cout << "Architecture: " << utsname.machine << endl;
         cout << "RUN...." << endl;
     #endif
-
 
 
     char menu = '9';
