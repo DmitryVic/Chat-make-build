@@ -158,6 +158,9 @@ int main()
             break;
         }
         std::cout << "Количество ядер: " << sysInfo.dwNumberOfProcessors << std::endl;
+        // Получаем идентификатор текущего процесса (PID)
+        DWORD processId = GetCurrentProcessId();
+        std::cout << _GREY_BG  << "ID процесса: " << processId << _CLEAR << std::endl;
         std::cout << "RUN...." << std::endl;
 
     // Для Linux/Mac
