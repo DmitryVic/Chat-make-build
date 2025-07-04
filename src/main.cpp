@@ -15,14 +15,18 @@
 #include <clocale> //для правильной лолокализации
 #include <locale>
 #include "hashPass.h"
+using namespace std;
 
-
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN  // Уменьшает количество включаемых заголовков Windows
-#include <windows.h>        // Используется для настройки консоли
+#if defined(_WIN32)
+    #define WIN32_LEAN_AND_MEAN  // Уменьшает количество включаемых заголовков Windows
+    #include <windows.h>        // Используется для настройки консоли
+    #define OS "Win"
+#elif defined(__linux__)
+    #include <sys/utsname.h>
+    #define OS "Linux"
 #endif
 
-using namespace std;
+
 
 
 void chatStart(shared_ptr<Database>& db, shared_ptr<User>& userAuthorization, shared_ptr<ChatHared>& haredChat){
@@ -128,20 +132,29 @@ int main()
 
     // Универсальная настройка локали
     setlocale(LC_ALL, "ru_RU.UTF-8");
-
+    
+    cout << _GREY_BG << "Сработала ветка OS: " << OS << _CLEAR << endl << endl;
     // Настройки для Windows
     // исправляет не коректную запись в string русских символов в консоле
     // распространяет локализацию на весь проект 
-    #ifdef _WIN32
+    #if defined(_WIN32)
         SetConsoleCP(CP_UTF8);
         SetConsoleOutputCP(CP_UTF8);
-    #endif
-    
     // Для Linux/Mac
     // был ли определен SET_GLOBAL_LOCALE_LINUX ? да (в cmake) или нет (в cmake)
-    #ifdef SET_GLOBAL_LOCALE_LINUX
+    #elif defined(__linux__)
         std::locale::global(std::locale("ru_RU.UTF-8"));
+        struct utsname utsname;
+        uname(&utsname);
+        cout << "OS name: " << utsname.sysname << endl; 
+        cout << "Host name: " << utsname.nodename << endl; 
+        cout << "OS release: " << utsname.release << endl; 
+        cout << "OS version: " << utsname.version << endl; 
+        cout << "Architecture: " << utsname.machine << endl;
+        cout << "RUN...." << endl;
     #endif
+
+
 
     char menu = '9';
     shared_ptr<Database> database(new Database());
